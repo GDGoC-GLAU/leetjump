@@ -152,4 +152,12 @@ export default defineBackground(() => {
 
   // Set up periodic sync alarm
   browser.alarms.create('leetcode-sync-check', { periodInMinutes: 360 }); // 6 hours
+
+  // Handle keyboard shortcut
+  browser.commands.onCommand.addListener(command => {
+    if (command === '_execute_action') {
+      console.log('LeetJump activated via keyboard shortcut');
+      // The extension popup should open automatically with this command
+    }
+  });
 });
