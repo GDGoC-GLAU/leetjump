@@ -54,6 +54,29 @@ function App() {
       },
     });
 
+    slashCommandService.registerCommand({
+      id: 'random',
+      aliases: ['random'],
+      description: 'Open a random problem',
+      execute: async () => {
+        setIsLoading(true);
+        try {
+          const response = await browser.runtime.sendMessage({
+            type: 'OPEN_RANDOM_PROBLEM',
+          });
+          if (response?.success) {
+            setQuery('');
+          } else {
+            console.error('Failed to open random problem:', response?.error);
+          }
+        } catch (error) {
+          console.error('Failed to execute RANDOM command:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      },
+    });
+
     // Register help command
     slashCommandService.registerCommand({
       id: 'help',

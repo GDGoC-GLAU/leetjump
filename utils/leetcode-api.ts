@@ -217,6 +217,12 @@ class LeetCodeService {
   async getAllProblems(): Promise<LeetCodeProblem[]> {
     return leetcodeDB.getAllProblems();
   }
+  async getRandomProblem(): Promise<LeetCodeProblem | null> {
+    const problems = await leetcodeDB.getAllProblems();
+    if (problems.length === 0) return null;
+    const randomIndex = Math.floor(Math.random() * problems.length);
+    return problems[randomIndex];
+  }
 
   async searchProblems(query: string): Promise<LeetCodeProblem[]> {
     return leetcodeDB.searchProblems(query);
