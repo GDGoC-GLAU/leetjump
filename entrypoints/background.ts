@@ -115,6 +115,38 @@ export default defineBackground(() => {
               response = { success: false, error: 'Failed to open daily problem' };
             }
             break;
+
+          case 'ACTIVATE_EXTENSION':
+            // Open the extension popup
+            try {
+              // Try to use the action API to open popup (works in Chromium and modern Firefox)
+              if (browser.action && typeof browser.action.openPopup === 'function') {
+                await browser.action.openPopup();
+              } else {
+                // Fallback: Open popup as a window
+                await browser.windows.create({
+                  url: browser.runtime.getURL('popup/index.html'),
+                  type: 'popup',
+                  width: 400,
+                  height: 600,
+                });
+              }
+              response = { success: true };
+            } catch (error) {
+              console.error('Failed to activate extension:', error);
+              // Last resort fallback: open in a new tab
+              try {
+                await browser.tabs.create({
+                  url: browser.runtime.getURL('popup/index.html'),
+                });
+                response = { success: true };
+              } catch (tabError) {
+                console.error('Failed to open as tab:', tabError);
+                response = { success: false, error: 'Failed to activate extension' };
+              }
+            }
+            break;
+
           default:
             console.warn('Unknown message type:', message.type);
             response = { success: false, error: 'Unknown message type' };
