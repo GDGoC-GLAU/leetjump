@@ -70,6 +70,23 @@ export default defineBackground(() => {
             });
             response = { success: true };
             break;
+          case 'OPEN_RANDOM_PROBLEM':
+            try {
+              const randomProblem = await leetcodeService.getRandomProblem();
+              if (randomProblem) {
+                await browser.tabs.create({
+                  url: leetcodeService.getProblemUrl(randomProblem.slug),
+                  active: true,
+                });
+                response = { success: true, data: randomProblem };
+              } else {
+                response = { success: false, error: 'No problem found' };
+              }
+            } catch (error) {
+              console.error('Failed to open random problem:', error);
+              response = { success: false, error: 'Failed to open random problem' };
+            }
+            break;
 
           case 'CHECK_SYNC_STATUS':
             const isStale = await leetcodeService.isDataStale();
@@ -115,6 +132,7 @@ export default defineBackground(() => {
               response = { success: false, error: 'Failed to open daily problem' };
             }
             break;
+
           default:
             console.warn('Unknown message type:', message.type);
             response = { success: false, error: 'Unknown message type' };
