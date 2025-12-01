@@ -70,6 +70,23 @@ export default defineBackground(() => {
             });
             response = { success: true };
             break;
+
+          case 'OPEN_PROBLEM_SAME_TAB':
+            // Open the problem in the same tab
+            const [currentTab] = await browser.tabs.query({ active: true, currentWindow: true });
+            if (currentTab?.id) {
+              await browser.tabs.update(currentTab.id, {
+                url: leetcodeService.getProblemUrl(message.slug, message.envType, message.envId),
+              });
+            } else {
+              // Fallback to opening in new tab if current tab not found
+              await browser.tabs.create({
+                url: leetcodeService.getProblemUrl(message.slug, message.envType, message.envId),
+                active: true,
+              });
+            }
+            response = { success: true };
+            break;
           case 'OPEN_RANDOM_PROBLEM':
             try {
               const randomProblem = await leetcodeService.getRandomProblem();
@@ -106,6 +123,30 @@ export default defineBackground(() => {
           case 'GET_DAILY_PROBLEM':
             const dailyProblem = await leetcodeService.getDailyProblem();
             response = { success: true, data: dailyProblem };
+            break;
+
+          case 'OPEN_DONATION_PAGE':
+            await browser.tabs.create({
+              url: 'https://buymeacoffee.com/lirena00',
+              active: true,
+            });
+            response = { success: true };
+            break;
+
+          case 'OPEN_GITHUB_REPO':
+            await browser.tabs.create({
+              url: 'https://github.com/GDGoC-GLAU/leetjump',
+              active: true,
+            });
+            response = { success: true };
+            break;
+
+          case 'OPEN_DISCORD_SERVER':
+            await browser.tabs.create({
+              url: 'https://discord.com/invite/pdxMMNGWCU',
+              active: true,
+            });
+            response = { success: true };
             break;
 
           case 'OPEN_DAILY_PROBLEM':

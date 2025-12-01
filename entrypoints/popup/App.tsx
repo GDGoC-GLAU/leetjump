@@ -55,6 +55,51 @@ function App() {
     });
 
     slashCommandService.registerCommand({
+      id: 'discord',
+      aliases: ['discord', 'support'],
+      description: 'Open the support Discord server',
+      execute: async () => {
+        try {
+          await browser.runtime.sendMessage({
+            type: 'OPEN_DISCORD_SERVER',
+          });
+        } catch (error) {
+          console.error('Failed to execute DISCORD command:', error);
+        }
+      },
+    });
+
+    slashCommandService.registerCommand({
+      id: 'github',
+      aliases: ['github', 'repo'],
+      description: 'Open the GitHub repository',
+      execute: async () => {
+        try {
+          await browser.runtime.sendMessage({
+            type: 'OPEN_GITHUB_REPO',
+          });
+        } catch (error) {
+          console.error('Failed to execute GITHUB command:', error);
+        }
+      },
+    });
+
+    slashCommandService.registerCommand({
+      id: 'sponsor',
+      aliases: ['donate', 'sponsor'],
+      description: 'Support the development of this extension',
+      execute: async () => {
+        try {
+          await browser.runtime.sendMessage({
+            type: 'OPEN_DONATION_PAGE',
+          });
+        } catch (error) {
+          console.error('Failed to execute DONATE command:', error);
+        }
+      },
+    });
+
+    slashCommandService.registerCommand({
       id: 'random',
       aliases: ['random'],
       description: 'Open a random problem',
@@ -226,8 +271,9 @@ function App() {
               suggestion.command.execute();
             }
           } else if (!isSlashMode && results[selectedIndex]) {
-            // Open selected problem
-            openProblem(results[selectedIndex]);
+            // Open selected problem - Enter opens in new tab, Shift+Enter in same tab
+            const openInNewTab = !e.shiftKey;
+            openProblem(results[selectedIndex], openInNewTab);
           }
           break;
 
@@ -242,11 +288,11 @@ function App() {
     [results, selectedIndex, query, slashCommandSuggestions]
   );
 
-  // Open problem in new tab
-  const openProblem = async (problem: LeetCodeProblem) => {
+  // Open problem in new tab or same tab
+  const openProblem = async (problem: LeetCodeProblem, openInNewTab: boolean = true) => {
     try {
       await browser.runtime.sendMessage({
-        type: 'OPEN_PROBLEM',
+        type: openInNewTab ? 'OPEN_PROBLEM' : 'OPEN_PROBLEM_SAME_TAB',
         slug: problem.slug,
       });
     } catch (error) {
