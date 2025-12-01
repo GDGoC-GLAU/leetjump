@@ -1,4 +1,5 @@
 import { leetcodeService } from '@/utils/leetcode-api';
+import { addToHistory, getHistory } from '@/utils/history';
 
 export default defineBackground(() => {
   // Handle extension installation
@@ -68,6 +69,15 @@ export default defineBackground(() => {
               url: leetcodeService.getProblemUrl(message.slug, message.envType, message.envId),
               active: true,
             });
+            // Track in history
+            if (message.problemData) {
+              await addToHistory({
+                slug: message.problemData.slug,
+                title: message.problemData.title,
+                difficulty: message.problemData.difficulty,
+                id: message.problemData.id,
+              });
+            }
             response = { success: true };
             break;
 
@@ -83,6 +93,15 @@ export default defineBackground(() => {
               await browser.tabs.create({
                 url: leetcodeService.getProblemUrl(message.slug, message.envType, message.envId),
                 active: true,
+              });
+            }
+            // Track in history
+            if (message.problemData) {
+              await addToHistory({
+                slug: message.problemData.slug,
+                title: message.problemData.title,
+                difficulty: message.problemData.difficulty,
+                id: message.problemData.id,
               });
             }
             response = { success: true };
@@ -171,6 +190,16 @@ export default defineBackground(() => {
             } catch (error) {
               console.error('Failed to open daily problem:', error);
               response = { success: false, error: 'Failed to open daily problem' };
+            }
+            break;
+
+          case 'GET_HISTORY':
+            try {
+              const history = await getHistory();
+              response = { success: true, data: history };
+            } catch (error) {
+              console.error('Failed to get history:', error);
+              response = { success: false, error: 'Failed to get history' };
             }
             break;
 

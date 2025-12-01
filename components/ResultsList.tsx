@@ -17,6 +17,7 @@ interface ResultsListProps {
   onOpenProblem: (problem: LeetCodeProblem) => void;
   slashCommandSuggestions?: SlashCommandSuggestion[];
   onSelectSlashCommand?: (command: string) => void;
+  isShowingHistory?: boolean;
 }
 
 export default function ResultsList({
@@ -27,10 +28,11 @@ export default function ResultsList({
   onOpenProblem,
   slashCommandSuggestions = [],
   onSelectSlashCommand,
+  isShowingHistory = false,
 }: ResultsListProps) {
   const hasResults = results.length > 0;
   const isSlashCommand = query.startsWith('/');
-  const shouldShowEmpty = !hasResults && !isLoading && !isSlashCommand;
+  const shouldShowEmpty = (!hasResults && !isLoading && !isSlashCommand) || (isShowingHistory && !hasResults && !isLoading);
   const shouldShowSlashSuggestions = isSlashCommand && slashCommandSuggestions.length > 0;
 
   // Check if we're in help mode
@@ -71,7 +73,7 @@ export default function ResultsList({
 
   return (
     <div ref={containerRef} className="flex-1 overflow-y-auto">
-      {shouldShowEmpty && <EmptyState hasQuery={!!query} isLoading={isLoading} />}
+      {shouldShowEmpty && <EmptyState hasQuery={!!query} isLoading={isLoading} isShowingHistory={isShowingHistory} />}
 
       {shouldShowSlashSuggestions && (
         <SlashCommandSuggestions
