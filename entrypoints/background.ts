@@ -206,10 +206,11 @@ export default defineBackground(() => {
           case 'OPEN_EXTENSION_STORE':
             try {
               const browserType = import.meta.env.BROWSER;
-              const storeUrl = browserType === 'firefox' 
-                ? 'https://addons.mozilla.org/en-US/firefox/addon/leetjump/'
-                : 'https://chromewebstore.google.com/detail/leetjump-leetcode-quick-s/mapaacjngblliffleponocgiopaclfld';
-              
+              const storeUrl =
+                browserType === 'firefox'
+                  ? 'https://addons.mozilla.org/en-US/firefox/addon/leetjump/'
+                  : 'https://chromewebstore.google.com/detail/leetjump-leetcode-quick-s/mapaacjngblliffleponocgiopaclfld';
+
               await browser.tabs.create({
                 url: storeUrl,
                 active: true,
