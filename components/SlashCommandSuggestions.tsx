@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { Zap, ArrowRight, HelpCircle, Calendar } from 'lucide-react';
 import { SlashCommandSuggestion } from '@/utils/slash-commands';
 
@@ -7,6 +7,7 @@ interface SlashCommandSuggestionsProps {
   selectedIndex: number;
   onSelect: (command: string) => void;
   isHelpMode?: boolean;
+  itemRefs?: React.RefObject<(HTMLDivElement | null)[]>;
 }
 
 export default function SlashCommandSuggestions({
@@ -14,6 +15,7 @@ export default function SlashCommandSuggestions({
   selectedIndex,
   onSelect,
   isHelpMode = false,
+  itemRefs,
 }: SlashCommandSuggestionsProps) {
   if (suggestions.length === 0) {
     return (
@@ -38,6 +40,11 @@ export default function SlashCommandSuggestions({
           return (
             <div
               key={`${suggestion.command.id}-${suggestion.matchedAlias}`}
+              ref={el => {
+                if (itemRefs) {
+                  itemRefs.current[index] = el;
+                }
+              }}
               className={`group px-4 py-3 cursor-pointer transition-all duration-150 border-l-2 ${
                 index === selectedIndex
                   ? 'bg-[var(--chart-4)]/10 border-l-[var(--chart-4)] border-l-4'
