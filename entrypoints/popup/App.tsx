@@ -24,6 +24,7 @@ function App() {
   const [slashCommandSuggestions, setSlashCommandSuggestions] = useState<SlashCommandSuggestion[]>(
     []
   );
+  const [isShowingHistory, setIsShowingHistory] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -132,6 +133,57 @@ function App() {
         setSlashCommandSuggestions(suggestions);
       },
     });
+
+    // Register history command
+    slashCommandService.registerCommand({
+      id: 'history',
+      aliases: ['history', 'recent'],
+      description: 'View your last 10 opened problems',
+      execute: async () => {
+        setIsLoading(true);
+        try {
+          const response = await browser.runtime.sendMessage({
+            type: 'GET_HISTORY',
+          });
+
+          if (response?.success) {
+            const historyData = response.data || [];
+
+            if (historyData.length > 0) {
+              // Convert history entries to SearchResult format
+              const historyResults: SearchResult[] = historyData.map((entry: any) => ({
+                id: entry.id,
+                title: entry.title,
+                slug: entry.slug,
+                difficulty: entry.difficulty,
+                isPaidOnly: false,
+                acRate: 0,
+                status: null,
+                matchType: 'title' as const,
+              }));
+              setResults(historyResults);
+              setIsShowingHistory(true);
+            } else {
+              // Empty history - show empty state
+              setResults([]);
+              setIsShowingHistory(true);
+            }
+            setQuery('');
+            setSlashCommandSuggestions([]);
+          } else {
+            console.error('Failed to get history:', response?.error);
+            setResults([]);
+            setIsShowingHistory(false);
+          }
+        } catch (error) {
+          console.error('Failed to execute HISTORY command:', error);
+          setResults([]);
+          setIsShowingHistory(false);
+        } finally {
+          setIsLoading(false);
+        }
+      },
+    });
   }, []);
 
   // Focus input on mount
@@ -166,6 +218,7 @@ function App() {
   const handleQueryChange = useCallback((newQuery: string) => {
     setQuery(newQuery);
     setSelectedIndex(0);
+    setIsShowingHistory(false); // Clear history mode when user types
 
     if (newQuery.startsWith('/')) {
       // Handle slash commands
@@ -223,14 +276,14 @@ function App() {
 
   // Debounced search effect
   useEffect(() => {
-    if (!query.startsWith('/')) {
+    if (!query.startsWith('/') && !isShowingHistory) {
       const timer = setTimeout(() => {
         performSearch(query);
       }, 150);
 
       return () => clearTimeout(timer);
     }
-  }, [query, performSearch]);
+  }, [query, performSearch, isShowingHistory]);
 
   // Handle slash command selection
   const handleSlashCommandSelect = useCallback((command: string) => {
@@ -282,6 +335,7 @@ function App() {
           setQuery('');
           setResults([]);
           setSlashCommandSuggestions([]);
+          setIsShowingHistory(false);
           break;
       }
     },
@@ -294,6 +348,12 @@ function App() {
       await browser.runtime.sendMessage({
         type: openInNewTab ? 'OPEN_PROBLEM' : 'OPEN_PROBLEM_SAME_TAB',
         slug: problem.slug,
+        problemData: {
+          slug: problem.slug,
+          title: problem.title,
+          difficulty: problem.difficulty,
+          id: problem.id,
+        },
       });
     } catch (error) {
       console.error('Failed to open problem:', error);
@@ -346,6 +406,7 @@ function App() {
         onOpenProblem={openProblem}
         slashCommandSuggestions={slashCommandSuggestions}
         onSelectSlashCommand={handleSlashCommandSelect}
+        isShowingHistory={isShowingHistory}
       />
 
       <Footer />

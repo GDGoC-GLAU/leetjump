@@ -1,9 +1,26 @@
 interface EmptyStateProps {
   hasQuery: boolean;
   isLoading: boolean;
+  isShowingHistory?: boolean;
 }
 
-export default function EmptyState({ hasQuery, isLoading }: EmptyStateProps) {
+export default function EmptyState({
+  hasQuery,
+  isLoading,
+  isShowingHistory = false,
+}: EmptyStateProps) {
+  // History empty state
+  if (isShowingHistory) {
+    return (
+      <div className="px-4 py-12 text-center">
+        <div className="text-sm font-medium text-[var(--foreground)] mb-1">No history yet</div>
+        <div className="text-xs text-[var(--muted-foreground)]">
+          Open some problems to see them here
+        </div>
+      </div>
+    );
+  }
+
   if (hasQuery && !isLoading) {
     return (
       <div className="px-4 py-12 text-center">
