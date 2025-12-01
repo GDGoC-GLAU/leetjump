@@ -203,6 +203,25 @@ export default defineBackground(() => {
             }
             break;
 
+          case 'OPEN_EXTENSION_STORE':
+            try {
+              const browserType = import.meta.env.BROWSER;
+              const storeUrl =
+                browserType === 'firefox'
+                  ? 'https://addons.mozilla.org/en-US/firefox/addon/leetjump/'
+                  : 'https://chromewebstore.google.com/detail/leetjump-leetcode-quick-s/mapaacjngblliffleponocgiopaclfld';
+
+              await browser.tabs.create({
+                url: storeUrl,
+                active: true,
+              });
+              response = { success: true };
+            } catch (error) {
+              console.error('Failed to open extension store:', error);
+              response = { success: false, error: 'Failed to open extension store' };
+            }
+            break;
+
           default:
             console.warn('Unknown message type:', message.type);
             response = { success: false, error: 'Unknown message type' };

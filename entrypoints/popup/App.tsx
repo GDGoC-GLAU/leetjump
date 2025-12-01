@@ -225,6 +225,23 @@ function App() {
         setQuery('');
       },
     });
+
+    // Register rate command
+    slashCommandService.registerCommand({
+      id: 'review',
+      aliases: ['rate', 'review', 'store'],
+      description: 'Rate this extension on the store',
+      execute: async () => {
+        try {
+          await browser.runtime.sendMessage({
+            type: 'OPEN_EXTENSION_STORE',
+          });
+          setQuery('');
+        } catch (error) {
+          console.error('Failed to execute RATE command:', error);
+        }
+      },
+    });
   }, [handleToggleTheme]);
 
   // Focus input on mount
