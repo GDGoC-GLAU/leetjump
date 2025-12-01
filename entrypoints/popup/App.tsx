@@ -148,7 +148,7 @@ function App() {
 
           if (response?.success) {
             const historyData = response.data || [];
-            
+
             if (historyData.length > 0) {
               // Convert history entries to SearchResult format
               const historyResults: SearchResult[] = historyData.map((entry: any) => ({

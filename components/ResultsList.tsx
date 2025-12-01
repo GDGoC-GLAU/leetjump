@@ -32,7 +32,9 @@ export default function ResultsList({
 }: ResultsListProps) {
   const hasResults = results.length > 0;
   const isSlashCommand = query.startsWith('/');
-  const shouldShowEmpty = (!hasResults && !isLoading && !isSlashCommand) || (isShowingHistory && !hasResults && !isLoading);
+  const shouldShowEmpty =
+    (!hasResults && !isLoading && !isSlashCommand) ||
+    (isShowingHistory && !hasResults && !isLoading);
   const shouldShowSlashSuggestions = isSlashCommand && slashCommandSuggestions.length > 0;
 
   // Check if we're in help mode
@@ -73,7 +75,9 @@ export default function ResultsList({
 
   return (
     <div ref={containerRef} className="flex-1 overflow-y-auto">
-      {shouldShowEmpty && <EmptyState hasQuery={!!query} isLoading={isLoading} isShowingHistory={isShowingHistory} />}
+      {shouldShowEmpty && (
+        <EmptyState hasQuery={!!query} isLoading={isLoading} isShowingHistory={isShowingHistory} />
+      )}
 
       {shouldShowSlashSuggestions && (
         <SlashCommandSuggestions
