@@ -51,18 +51,10 @@ export default function ResultsList({
       const container = containerRef.current;
 
       if (targetElement && container) {
-        const containerRect = container.getBoundingClientRect();
-        const elementRect = targetElement.getBoundingClientRect();
-
-        const isAboveView = elementRect.top < containerRect.top;
-        const isBelowView = elementRect.bottom > containerRect.bottom;
-
-        if (isAboveView || isBelowView) {
-          targetElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'nearest',
-          });
-        }
+        targetElement.scrollIntoView({
+          behavior: 'auto',
+          block: 'nearest',
+        });
       }
     }
   }, [selectedIndex, hasResults, shouldShowSlashSuggestions]);
@@ -85,6 +77,7 @@ export default function ResultsList({
           selectedIndex={selectedIndex}
           onSelect={onSelectSlashCommand || (() => {})}
           isHelpMode={isHelpMode}
+          itemRefs={itemRefs}
         />
       )}
 

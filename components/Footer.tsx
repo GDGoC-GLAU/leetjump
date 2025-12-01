@@ -15,8 +15,12 @@ export default function Footer() {
       <div className="flex justify-center items-center text-xs text-[var(--muted-foreground)] mb-2">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1">
-            <ChevronUp className="w-3 h-3" />
-            <ChevronDown className="w-3 h-3" />
+            <kbd className="px-1 py-0.5 bg-[var(--background)] border border-[var(--border)] rounded-[var(--radius-sm)] text-xs flex items-center">
+              <ChevronUp className="w-3 h-3" />
+            </kbd>
+            <kbd className="px-1 py-0.5 bg-[var(--background)] border border-[var(--border)] rounded-[var(--radius-sm)] text-xs flex items-center">
+              <ChevronDown className="w-3 h-3" />
+            </kbd>
             <span>Navigate</span>
           </div>
           <div className="flex items-center gap-1">

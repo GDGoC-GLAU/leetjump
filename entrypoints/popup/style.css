@@ -23,7 +23,7 @@ body {
 }
 
 :root {
-  /* Used variables only */
+  /* Light theme (default) */
   --background: oklch(0.9761 0.0041 91.4461);
   --foreground: oklch(22.645% 0.00003 271.152);
   --card: oklch(0.991 0.0041 91.4454);
@@ -44,6 +44,23 @@ body {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
+}
+
+:root[data-theme='dark'] {
+  /* Dark theme */
+  --background: oklch(0.15 0.005 264);
+  --foreground: oklch(0.98 0.005 264);
+  --card: oklch(0.18 0.005 264);
+  --primary: oklch(0.98 0 0);
+  --muted: oklch(0.25 0.005 264);
+  --muted-foreground: oklch(0.65 0.015 264);
+  --accent: oklch(0.25 0.005 264);
+  --destructive: oklch(0.6368 0.2078 25.3313);
+  --border: oklch(0.28 0.005 264);
+  --ring: oklch(0.7118 0.0129 286.0665);
+  --chart-2: oklch(0.6056 0.2189 292.7172);
+  --chart-3: oklch(0.7227 0.192 149.5793);
+  --chart-4: oklch(0.7952 0.1617 86.0468);
 }
 
 /* Scrollbar styling */
