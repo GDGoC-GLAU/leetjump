@@ -25,8 +25,38 @@ function App() {
     []
   );
   const [isShowingHistory, setIsShowingHistory] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Initialize theme from storage
+  useEffect(() => {
+    const loadTheme = async () => {
+      try {
+        const result = await browser.storage.local.get('theme');
+        const savedTheme = result.theme || 'light';
+        const isDark = savedTheme === 'dark';
+        setIsDarkMode(isDark);
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      } catch (error) {
+        console.error('Failed to load theme:', error);
+      }
+    };
+    loadTheme();
+  }, []);
+
+  // Toggle theme
+  const handleToggleTheme = useCallback(async () => {
+    const newTheme = isDarkMode ? 'light' : 'dark';
+    setIsDarkMode(!isDarkMode);
+    document.documentElement.setAttribute('data-theme', newTheme);
+
+    try {
+      await browser.storage.local.set({ theme: newTheme });
+    } catch (error) {
+      console.error('Failed to save theme:', error);
+    }
+  }, [isDarkMode]);
 
   // Initialize slash commands
   useEffect(() => {
@@ -184,7 +214,18 @@ function App() {
         }
       },
     });
-  }, []);
+
+    // Register theme toggle command
+    slashCommandService.registerCommand({
+      id: 'theme',
+      aliases: ['theme', 'dark', 'light'],
+      description: 'Toggle between dark and light mode',
+      execute: async () => {
+        handleToggleTheme();
+        setQuery('');
+      },
+    });
+  }, [handleToggleTheme]);
 
   // Focus input on mount
   useEffect(() => {
@@ -388,7 +429,13 @@ function App() {
 
   return (
     <div className="w-full h-screen bg-[var(--background)] overflow-hidden font-[var(--font-sans)] flex flex-col">
-      <Header syncStatus={syncStatus} isLoading={isLoading} onSync={handleSync} />
+      <Header
+        syncStatus={syncStatus}
+        isLoading={isLoading}
+        onSync={handleSync}
+        isDarkMode={isDarkMode}
+        onToggleTheme={handleToggleTheme}
+      />
 
       <SearchInput
         query={query}

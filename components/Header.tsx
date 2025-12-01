@@ -1,4 +1,4 @@
-import { Database, RotateCw } from 'lucide-react';
+import { Database, RotateCw, Moon, Sun } from 'lucide-react';
 
 interface SyncStatus {
   isStale: boolean;
@@ -10,9 +10,17 @@ interface HeaderProps {
   syncStatus: SyncStatus | null;
   isLoading: boolean;
   onSync: () => void;
+  isDarkMode: boolean;
+  onToggleTheme: () => void;
 }
 
-export default function Header({ syncStatus, isLoading, onSync }: HeaderProps) {
+export default function Header({
+  syncStatus,
+  isLoading,
+  onSync,
+  isDarkMode,
+  onToggleTheme,
+}: HeaderProps) {
   return (
     <div className="px-4 py-3 border-b border-[var(--border)] bg-[var(--card)] flex-shrink-0">
       <div className="flex items-center justify-between">
@@ -51,6 +59,13 @@ export default function Header({ syncStatus, isLoading, onSync }: HeaderProps) {
                 Sync
               </div>
             )}
+          </button>
+          <button
+            onClick={onToggleTheme}
+            className="minimal-button px-2 py-1 text-xs text-[var(--muted-foreground)] border border-[var(--border)] rounded-[var(--radius-md)] hover:bg-[var(--accent)]"
+            title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {isDarkMode ? <Sun className="w-3 h-3" /> : <Moon className="w-3 h-3" />}
           </button>
         </div>
       </div>
