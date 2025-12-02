@@ -54,7 +54,11 @@ export default defineBackground(() => {
             break;
 
           case 'SYNC_PROBLEMS':
-            const didSync = await leetcodeService.syncProblems(message.onProgress);
+            // Force sync when user clicks the button
+            const didSync = await leetcodeService.syncProblems(
+              message.onProgress,
+              true // Force sync
+            );
             response = { success: true, synced: didSync };
             break;
 
@@ -243,13 +247,15 @@ export default defineBackground(() => {
 
   browser.alarms.onAlarm.addListener(async alarm => {
     if (alarm.name === 'leetcode-sync-check') {
-      console.log('Checking if sync is needed...');
+      console.log('Periodic sync check running...');
 
       try {
         const isStale = await leetcodeService.isDataStale();
         if (isStale) {
           console.log('Data is stale, syncing...');
-          await leetcodeService.syncProblems();
+          await leetcodeService.syncProblems(undefined, false); // Don't force on periodic sync
+        } else {
+          console.log('Data is fresh, skipping sync');
         }
       } catch (error) {
         console.error('Error during periodic sync:', error);
@@ -257,6 +263,6 @@ export default defineBackground(() => {
     }
   });
 
-  // Set up periodic sync alarm
+  // Set up periodic sync alarm - runs every 6 hours, but only syncs if data is >24h old
   browser.alarms.create('leetcode-sync-check', { periodInMinutes: 360 }); // 6 hours
 });
