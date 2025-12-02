@@ -1,5 +1,6 @@
 # LeetJump
 
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/lirena00/leetjump/releases)
 [![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)](https://reactjs.org/)
@@ -14,8 +15,12 @@ coding practice again!
 
 ## Features
 
-- **Instant Search**: Search 3000+ LeetCode problems by number, title.
+- **Instant Search**: Search 3000+ LeetCode problems by number, title
 - **Keyboard Shortcuts**: `Alt+L` to open anywhere on any website
+- **Slash Commands**: Quick actions with `/` commands (POTD, random, history,
+  and more)
+- **Problem History**: Track your last 10 opened problems with `/history`
+- **Dark Mode**: Toggle between light and dark themes with `/theme`
 - **Smart Matching**: Find problems by ID (e.g., "1"), partial titles
 - **Modern UI**: Clean, minimal interface that doesn't interfere with your
   workflow
@@ -46,9 +51,26 @@ Visit the Chrome Web Store page (link coming soon) and click "Add to Chrome".
 2. **Search**: Type to search problems:
    - By number: `"1"` → Two Sum
    - By title: `"binary"` → All binary search problems
+   - By slash command: `"/potd"` → Today's Problem of the Day
 3. **Navigate**: Use ↑↓ arrow keys to navigate results
 4. **Open**: Press Enter or click to open the problem in a new tab
 5. **Close**: Press Escape or click outside the popup
+
+### Slash Commands
+
+Type `/` followed by a command to access quick actions:
+
+| Command    | Aliases            | Description                        |
+| ---------- | ------------------ | ---------------------------------- |
+| `/potd`    | `/today`, `/daily` | Open today's Problem of the Day    |
+| `/random`  | -                  | Open a random LeetCode problem     |
+| `/history` | `/recent`          | View your last 10 opened problems  |
+| `/theme`   | `/dark`, `/light`  | Toggle between dark and light mode |
+| `/discord` | `/support`         | Open the support Discord server    |
+| `/github`  | `/repo`            | Open the GitHub repository         |
+| `/review`  | `/rate`, `/store`  | Rate this extension on the store   |
+| `/donate`  | `/sponsor`         | Support the development            |
+| `/help`    | `/commands`        | Show all available commands        |
 
 ## Development
 
@@ -177,17 +199,28 @@ for details.
 
 ## Roadmap
 
-### Search Enhancements
+### Completed in v1.1.0 ✅
+
+- ✅ Slash commands for quick actions
+- ✅ Problem history tracking (last 10 problems)
+- ✅ Dark mode support
+- ✅ Random problem selector
+- ✅ Daily problem quick access
+- ✅ Improved sync reliability
+
+### Upcoming Features
+
+#### Search Enhancements
 
 - Fuzzy search with intelligent scoring
 - Search by company tags
 - Advanced filtering by difficulty/status/tags
 
-### Data Features
+#### Data Features
 
 - Problem solving progress tracking
 - Personal notes and bookmarks
-- Recently viewed problems history
+- Extended history with search
 - Offline synchronization improvements
 
 ### Advanced Features

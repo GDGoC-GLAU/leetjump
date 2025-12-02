@@ -6,7 +6,7 @@ export default defineConfig({
   manifest: {
     name: 'LeetJump - Leetcode quick search extension',
     description: 'Quick LeetCode problem search with Alt+L - minimal, fast, and clean interface',
-    version: '1.0.1',
+    version: '1.1.0',
     permissions: ['alarms', 'storage'],
     host_permissions: ['https://leetcode.com/*', 'https://leetcode.cn/*'],
     commands: {
