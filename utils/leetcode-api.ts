@@ -183,22 +183,28 @@ class LeetCodeService {
     }
   }
 
-  async syncProblems(onProgress?: (current: number, total: number) => void): Promise<boolean> {
+  async syncProblems(
+    onProgress?: (current: number, total: number) => void,
+    force: boolean = false
+  ): Promise<boolean> {
     try {
-      // Check if we need to sync
-      const metadata = await leetcodeDB.getMetadata();
-      const now = Date.now();
+      // Only check cache if not forcing sync
+      if (!force) {
+        const metadata = await leetcodeDB.getMetadata();
+        const now = Date.now();
 
-      if (metadata && now - metadata.lastFetched < this.CACHE_DURATION) {
-        console.log('Problems are up to date, skipping sync');
-        return false;
+        if (metadata && now - metadata.lastFetched < this.CACHE_DURATION) {
+          console.log('Problems are up to date, skipping sync');
+          return false;
+        }
       }
 
-      console.log('Syncing problems from LeetCode API...');
+      console.log(force ? 'Force syncing problems...' : 'Syncing problems from LeetCode API...');
 
       const problems = await this.fetchAllProblems(onProgress);
 
       // Save to database
+      const now = Date.now();
       await leetcodeDB.saveProblems(problems);
       await leetcodeDB.saveMetadata({
         lastFetched: now,

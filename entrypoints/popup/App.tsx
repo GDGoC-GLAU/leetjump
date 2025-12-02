@@ -422,9 +422,16 @@ function App() {
   const handleSync = async () => {
     setIsLoading(true);
     try {
-      await browser.runtime.sendMessage({
+      const syncResponse = await browser.runtime.sendMessage({
         type: 'SYNC_PROBLEMS',
       });
+
+      // Show feedback based on sync result
+      if (syncResponse?.synced) {
+        console.log('Sync completed successfully');
+      } else {
+        console.log('Sync was not needed or failed');
+      }
 
       const response = await browser.runtime.sendMessage({
         type: 'CHECK_SYNC_STATUS',
