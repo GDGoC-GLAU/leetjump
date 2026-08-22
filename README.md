@@ -1,6 +1,6 @@
 # LeetJump
 
-[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/lirena00/leetjump/releases)
+[![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)](https://github.com/lirena00/leetjump/releases)
 [![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)](https://reactjs.org/)
