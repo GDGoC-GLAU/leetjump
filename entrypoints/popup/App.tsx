@@ -11,6 +11,8 @@ interface SearchResult extends LeetCodeProblem {
   matchType?: 'id' | 'title' | 'slug';
 }
 
+type ListMode = 'history' | 'attempted' | 'solved' | null;
+
 function App() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
@@ -24,7 +26,7 @@ function App() {
   const [slashCommandSuggestions, setSlashCommandSuggestions] = useState<SlashCommandSuggestion[]>(
     []
   );
-  const [isShowingHistory, setIsShowingHistory] = useState(false);
+  const [listMode, setListMode] = useState<ListMode>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -192,28 +194,73 @@ function App() {
                 matchType: 'title' as const,
               }));
               setResults(historyResults);
-              setIsShowingHistory(true);
+              setListMode('history');
             } else {
               // Empty history - show empty state
               setResults([]);
-              setIsShowingHistory(true);
+              setListMode('history');
             }
             setQuery('');
             setSlashCommandSuggestions([]);
           } else {
             console.error('Failed to get history:', response?.error);
             setResults([]);
-            setIsShowingHistory(false);
+            setListMode(null);
           }
         } catch (error) {
           console.error('Failed to execute HISTORY command:', error);
           setResults([]);
-          setIsShowingHistory(false);
+          setListMode(null);
         } finally {
           setIsLoading(false);
         }
       },
     });
+
+    const registerStatusCommand = (mode: 'attempted' | 'solved') => {
+      slashCommandService.registerCommand({
+        id: mode,
+        aliases: [mode],
+        description: `View all ${mode} problems`,
+        execute: async () => {
+          setIsLoading(true);
+          try {
+            const response = await browser.runtime.sendMessage({
+              type: 'GET_ALL_PROBLEMS',
+            });
+
+            if (response?.success) {
+              const status = mode === 'solved' ? 'ac' : 'notac';
+              const statusResults: SearchResult[] = response.data
+                .filter((problem: LeetCodeProblem) => problem.status === status)
+                .map((problem: LeetCodeProblem) => ({
+                  ...problem,
+                  matchType: 'title' as const,
+                }));
+
+              setResults(statusResults);
+              setSelectedIndex(0);
+              setListMode(mode);
+              setQuery('');
+              setSlashCommandSuggestions([]);
+            } else {
+              console.error(`Failed to get ${mode} problems:`, response?.error);
+              setResults([]);
+              setListMode(mode);
+            }
+          } catch (error) {
+            console.error(`Failed to execute ${mode} command:`, error);
+            setResults([]);
+            setListMode(mode);
+          } finally {
+            setIsLoading(false);
+          }
+        },
+      });
+    };
+
+    registerStatusCommand('attempted');
+    registerStatusCommand('solved');
 
     // Register theme toggle command
     slashCommandService.registerCommand({
@@ -276,7 +323,7 @@ function App() {
   const handleQueryChange = useCallback((newQuery: string) => {
     setQuery(newQuery);
     setSelectedIndex(0);
-    setIsShowingHistory(false); // Clear history mode when user types
+    setListMode(null); // Clear list mode when user types
 
     if (newQuery.startsWith('/')) {
       // Handle slash commands
@@ -334,14 +381,14 @@ function App() {
 
   // Debounced search effect
   useEffect(() => {
-    if (!query.startsWith('/') && !isShowingHistory) {
+    if (!query.startsWith('/') && !listMode) {
       const timer = setTimeout(() => {
         performSearch(query);
       }, 150);
 
       return () => clearTimeout(timer);
     }
-  }, [query, performSearch, isShowingHistory]);
+  }, [query, performSearch, listMode]);
 
   // Handle slash command selection
   const handleSlashCommandSelect = useCallback((command: string) => {
@@ -393,7 +440,7 @@ function App() {
           setQuery('');
           setResults([]);
           setSlashCommandSuggestions([]);
-          setIsShowingHistory(false);
+          setListMode(null);
           break;
       }
     },
@@ -477,7 +524,7 @@ function App() {
         onOpenProblem={openProblem}
         slashCommandSuggestions={slashCommandSuggestions}
         onSelectSlashCommand={handleSlashCommandSelect}
-        isShowingHistory={isShowingHistory}
+        listMode={listMode}
       />
 
       <Footer />

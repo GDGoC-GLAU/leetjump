@@ -60,17 +60,19 @@ Visit the Chrome Web Store page (link coming soon) and click "Add to Chrome".
 
 Type `/` followed by a command to access quick actions:
 
-| Command    | Aliases            | Description                        |
-| ---------- | ------------------ | ---------------------------------- |
-| `/potd`    | `/today`, `/daily` | Open today's Problem of the Day    |
-| `/random`  | -                  | Open a random LeetCode problem     |
-| `/history` | `/recent`          | View your last 10 opened problems  |
-| `/theme`   | `/dark`, `/light`  | Toggle between dark and light mode |
-| `/discord` | `/support`         | Open the support Discord server    |
-| `/github`  | `/repo`            | Open the GitHub repository         |
-| `/review`  | `/rate`, `/store`  | Rate this extension on the store   |
-| `/donate`  | `/sponsor`         | Support the development            |
-| `/help`    | `/commands`        | Show all available commands        |
+| Command      | Aliases            | Description                        |
+| ------------ | ------------------ | ---------------------------------- |
+| `/potd`      | `/today`, `/daily` | Open today's Problem of the Day    |
+| `/random`    | -                  | Open a random LeetCode problem     |
+| `/history`   | `/recent`          | View your last 10 opened problems  |
+| `/attempted` | -                  | View your attempted problems       |
+| `/solved`    | -                  | View your solved problems          |
+| `/theme`     | `/dark`, `/light`  | Toggle between dark and light mode |
+| `/discord`   | `/support`         | Open the support Discord server    |
+| `/github`    | `/repo`            | Open the GitHub repository         |
+| `/review`    | `/rate`, `/store`  | Rate this extension on the store   |
+| `/donate`    | `/sponsor`         | Support the development            |
+| `/help`      | `/commands`        | Show all available commands        |
 
 ## Development
 
@@ -129,14 +131,12 @@ bun run build           # Build for production
 ### Extension Components
 
 - **Background Script (`background.ts`)**:
-
   - Handles LeetCode API communication
   - Manages data syncing and caching
   - Processes keyboard shortcuts
   - Manages extension lifecycle and alarms
 
 - **React Components**:
-
   - Modern functional components with TypeScript
   - Keyboard navigation support
   - Responsive design for different screen sizes
