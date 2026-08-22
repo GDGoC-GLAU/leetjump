@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, CheckCircle2, MinusCircle } from 'lucide-react';
 import { LeetCodeProblem } from '@/utils/database';
 
 interface ProblemItemProps {
@@ -22,6 +22,32 @@ const ProblemItem = forwardRef<HTMLDivElement, ProblemItemProps>(
 
     const getDifficultyText = (difficulty: string) => {
       return difficulty.charAt(0).toUpperCase() + difficulty.slice(1).toLowerCase();
+    };
+
+    const getStatusIndicator = (status: LeetCodeProblem['status']) => {
+      if (status === 'ac') {
+        return (
+          <span
+            title="Solved"
+            className="flex items-center gap-1 text-[0.65rem] font-semibold text-[var(--status-solved)] leading-none"
+          >
+            <CheckCircle2 className="w-3 h-3" />
+            <span>Solved</span>
+          </span>
+        );
+      }
+      if (status === 'notac') {
+        return (
+          <span
+            title="Attempted"
+            className="flex items-center gap-1 text-[0.65rem] font-semibold text-[var(--status-attempted)] leading-none"
+          >
+            <MinusCircle className="w-3 h-3" />
+            <span>Attempted</span>
+          </span>
+        );
+      }
+      return null;
     };
 
     const isSelected = index === selectedIndex;
@@ -55,6 +81,9 @@ const ProblemItem = forwardRef<HTMLDivElement, ProblemItemProps>(
 
           {/* Difficulty and Status */}
           <div className="flex items-center gap-3 flex-shrink-0">
+            {/* Solved / Attempted badge */}
+            {getStatusIndicator(problem.status)}
+
             <div className="flex items-center gap-1">
               <span className={`difficulty-dot ${getDifficultyDot(problem.difficulty)}`}></span>
               <span className="text-xs text-[var(--muted-foreground)]">
