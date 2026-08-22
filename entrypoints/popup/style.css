@@ -44,6 +44,10 @@ body {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
+
+  /* Solve status colors */
+  --status-solved: oklch(0.60 0.17 145);    /* green  */
+  --status-attempted: oklch(0.72 0.15 65);  /* amber  */
 }
 
 :root[data-theme='dark'] {
@@ -61,6 +65,10 @@ body {
   --chart-2: oklch(0.6056 0.2189 292.7172);
   --chart-3: oklch(0.7227 0.192 149.5793);
   --chart-4: oklch(0.7952 0.1617 86.0468);
+
+  /* Solve status colors */
+  --status-solved: oklch(0.72 0.17 145);    /* brighter green for dark bg */
+  --status-attempted: oklch(0.80 0.15 70);  /* brighter amber for dark bg */
 }
 
 /* Scrollbar styling */
